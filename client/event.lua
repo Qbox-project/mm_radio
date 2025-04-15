@@ -1,6 +1,6 @@
 AddEventHandler('onResourceStart', function(resource)
     if GetCurrentResourceName() == resource then
-        if Shared.Core and Framework.core.playerLoaded() then
+        if LocalPlayer.state.isLoggedIn then
             Radio:Init()
             Radio.playerLoaded = true
             TriggerServerEvent('mm_radio:server:createdefaultjammer')
@@ -51,7 +51,7 @@ end)
 
 RegisterNetEvent('mm_radio:client:usejammer', function()
     if not Shared.Jammer.permission or not (lib.table.contains(Shared.Jammer.permission, Radio.PlayerJob) or lib.table.contains(Shared.Jammer.permission, Radio.PlayerGang)) then
-        return Framework.notify({
+        lib.notify({
             title = 'You dont have permission to use this item',
             type = 'error'
         })
@@ -222,7 +222,7 @@ RegisterNetEvent("pma-voice:setTalkingOnRadio", function(source, talkingState)
     })
 end)
 
-RegisterNetEvent('bl_bridge:client:playerLoaded', function()
+RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     Radio.playerLoaded = true
     Radio:Init()
     TriggerServerEvent('mm_radio:server:createdefaultjammer')
@@ -233,14 +233,14 @@ RegisterNetEvent('bl_bridge:client:playerLoaded', function()
     end
 end)
 
-RegisterNetEvent('bl_bridge:client:playerUnloaded', function()
+RegisterNetEvent('QBCore:Client:OnPlayerUnload', function()
     Radio.hasRadio = false
     Radio:leaveradio()
     Radio.playerLoaded = false
 end)
 
-RegisterNetEvent('bl_bridge:client:jobUpdated', function(job)
-    local player = Framework.core.getPlayerData()
+RegisterNetEvent('QBCore:Client:OnJobUpdate', function(job)
+    local player = QBX.PlayerData
     player.job = job
     Radio:Init(player)
 end)
@@ -253,8 +253,8 @@ RegisterNetEvent('QBCore:Player:SetPlayerData', function(val)
     end
 end)
 
-RegisterNetEvent('bl_bridge:client:gangUpdated', function(gang)
-    local player = Framework.core.getPlayerData()
+RegisterNetEvent('QBCore:Client:OnGangUpdate', function(gang)
+    local player = QBX.PlayerData
     player.gang = gang
     Radio:Init(player)
 end)

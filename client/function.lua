@@ -68,15 +68,13 @@ function Radio:SetDefaultData(cid)
 end
 
 function Radio:Init(data)
-    local player = data or Framework.core.getPlayerData()
+    local player = data or QBX.PlayerData
     self.identifier = player.cid
     self.PlayerJob = player.job.name
-    self.PlayerDuty = player.job.onDuty
-    if Shared.Core == 'qb' then
-        self.PlayerGang = player.gang.name
-    end
+    self.PlayerDuty = player.job.onduty
+    self.PlayerGang = player.gang.name
     if not self.userData[self.identifier] then self:SetDefaultData(self.identifier) end
-    self.userData[self.identifier].name = self.userData[self.identifier].name or player.firstName .. " " .. player.lastName
+    self.userData[self.identifier].name = self.userData[self.identifier].name or player.charinfo.firstname .. " " .. player.charinfo.lastname
     local rec = {}
     for k, v in pairs(Shared.RestrictedChannels) do
         if v.type == 'job' and lib.table.contains(v.name, self.PlayerJob) then
@@ -121,16 +119,15 @@ function Radio:connecttoradio(channel)
     end
 end
 
-function Radio:doRadioCheck(items)
-    if not Shared.Inventory then self.hasRadio = true return end
+function Radio:doRadioCheck(_)
     self.batteryData = {}
     self.hasRadio = false
-    local playerItems = items or Framework.inventory.playerItems()
+    local playerItems = exports.ox_inventory:Search('slots', Shared.RadioItem)
     for _, v in pairs(playerItems) do
         if lib.table.contains(Shared.RadioItem, v.name) then
             self.hasRadio = true
             if v.metadata?.radioId or v.info?.radioId then
-                self.batteryData[#self.batteryData+1] = v[Shared.Inventory == 'ox' and 'metadata' or 'info'].radioId
+                self.batteryData[#self.batteryData+1] = v['metadata'].radioId
             end
         end
     end
@@ -465,9 +462,7 @@ lib.addKeybind({
     defaultKey = 'EQUALS',
     onPressed = function()
         if not Radio.usingRadio then
-            if Shared.Inventory and Radio.hasRadio then
-                TriggerEvent('mm_radio:client:use')
-            elseif not Shared.Inventory then
+            if Radio.hasRadio then
                 TriggerEvent('mm_radio:client:use')
             end
         end

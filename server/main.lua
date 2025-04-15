@@ -17,14 +17,14 @@ end)
 
 RegisterNetEvent('mm_radio:server:rechargeBattery', function()
     local src = source
-    local player = Framework.core.GetPlayer(src)
     for i=1, #Shared.RadioItem do
-        local item = player.getItem(Shared.RadioItem[i])
+        local item = exports.ox_inventory:GetSlotWithItem(src, Shared.RadioItem[i])
         if item then
+            print(json.encode(item, {indent = true}))
             local id = item.metadata?.radioId or false
             if not id then return end
             batteryData[id] = 100
-            player.removeItem('radiocell', 1)
+            exports.ox_inventory:RemoveItem(src, 'radiocell', 1)
             break
         end
     end
@@ -38,8 +38,7 @@ RegisterNetEvent('mm_radio:server:spawnobject', function(data)
 		SetEntityHeading(entity, data.coords.w)
         local netobj = NetworkGetNetworkIdFromEntity(entity)
         if data.canRemove then
-            local player = Framework.core.GetPlayer(src)
-            player.removeItem('jammer', 1)
+            exports.ox_inventory:RemoveItem(src, 'jammer', 1)
         end
         TriggerClientEvent('mm_radio:client:syncobject', -1, {
             enable = true,
@@ -85,8 +84,7 @@ RegisterNetEvent('mm_radio:server:removejammer', function(id, isDamaged)
                 TriggerClientEvent('mm_radio:client:removejammer', -1, id)
                 table.remove(jammer, i)
                 if not isDamaged then
-                    local player = Framework.core.GetPlayer(src)
-                    player.addItem('jammer', 1)
+                    exports.ox_inventory:AddItem(src, 'jammer', 1)
                 end
                 break
             end
@@ -186,56 +184,34 @@ RegisterNetEvent("mm_radio:server:createdefaultjammer", function()
 end)
 
 local function SetRadioData(src, slot)
-    local player = Framework.core.GetPlayer(src)
-    local radioId = player.id .. math.random(1000, 9999)
-    local name = player.charinfo.firstname .. " " .. player.charinfo.lastname
-    if Shared.Inventory == 'ox' then
-        exports.ox_inventory:SetMetadata(src, slot, { radioId = radioId, name = name })
-        return radioId
-    elseif Shared.Inventory == 'qb' or Shared.Inventory == 'ps' then
-        local items = player.items
-        local item = items[slot]
-        if item  then
-            item.info = item.info or {}
-            item.info ={
-                radioId = radioId,
-                name = name
-            }
-            local invResourceName = exports.bl_bridge:getFramework('inventory')
-            exports[invResourceName]:SetInventory(src, items)
-            return radioId
-        end
-        return false
-    elseif Shared.Inventory == 'qs' then
-        exports['qs-inventory']:SetItemMetadata(src, slot, { radioId = radioId, name = name })
-        return radioId
-    else
-        return false
-    end
+    local player = exports.qbx_core:GetPlayer(src)
+    local radioId = player.PlayerData.citizenid .. math.random(1000, 9999)
+    local name = player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
+    print('ghnm')
+    exports.ox_inventory:SetMetadata(src, slot, { radioId = radioId, name = name })
+    return radioId
 end
 
 local function GetSlotWithRadio(source)
-    local player = Framework.core.GetPlayer(source)
     for i=1, #Shared.RadioItem do
-        local item = player.getItem(Shared.RadioItem[i])
-        if item then
-            return item.slot
-        end
+        return exports.ox_inventory:GetSlotIdWithItem(source, Shared.RadioItem[i])
     end
 end
 
 lib.callback.register('mm_radio:server:getradiodata', function(source, slot)
-    if not Shared.Inventory or not Shared.Battery.state then return 100, 'PERSONAL' end
+    if not Shared.Battery.state then return 100, 'PERSONAL' end
     local battery = 100
-    local player = Framework.core.GetPlayer(source)
+    local slotid = false
     if not slot then
-        slot = GetSlotWithRadio(source)
+        slotid = GetSlotWithRadio(source)
+    else
+        slotid = slot.slot
     end
-    local slotData = player.items[slot]
+    local slotData = exports.ox_inventory:GetSlot(source, slotid)
     if slotData and lib.table.contains(Shared.RadioItem, slotData.name) then
         local id = false
         if not slotData.metadata?.radioId then
-            id = SetRadioData(source, slot)
+            id = SetRadioData(source, slotid)
         else
             id = slotData.metadata?.radioId
         end
@@ -248,7 +224,7 @@ lib.callback.register('mm_radio:server:getjammer', function()
     return jammer
 end)
 
-if Shared.UseCommand or not Shared.Inventory then
+if Shared.UseCommand then
     if not Shared.Ready then return end
     lib.addCommand('radio', {
         help = 'Open Radio Menu',
@@ -277,26 +253,4 @@ lib.addCommand('remradiodata', {
     TriggerClientEvent('mm_radio:client:removedata', source)
 end)
 
-lib.versionCheck('SOH69/mm_radio')
-
-if Shared.Ready then
-    for i=1, #Shared.RadioItem do
-        Framework.core.RegisterUsableItem(Shared.RadioItem[i], function(source, slot, metadata)
-            TriggerClientEvent('mm_radio:client:use', source, slot, metadata)
-        end)
-    end
-
-    if Shared.Jammer.state then
-        Framework.core.RegisterUsableItem('jammer', function(source)
-            TriggerClientEvent('mm_radio:client:usejammer', source)
-        end)
-    end
-
-    if Shared.Battery.state then
-        Framework.core.RegisterUsableItem('radiocell', function(source)
-            TriggerClientEvent('mm_radio:client:recharge', source)
-        end)
-    end
-else
-    return error('Cannot Start Resource, MISSING DEPENDENCIES', 0)
-end
+lib.versionCheck('Qbox-project/mm_radio')

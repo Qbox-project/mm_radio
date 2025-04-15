@@ -116,14 +116,14 @@ RegisterNUICallback('updateRadioSize', function(data, cb)
 end)
 
 RegisterNUICallback('saveData', function(data, cb)
-    local player = Framework.core.getPlayerData()
+    local player = QBX.PlayerData
     local identifier = player.cid
     if not identifier then return Radio:Notify(locale('unsuccess_name', channel)) end
     Radio.userData[Radio.identifier].name = data.name
     Radio:update()
     TriggerServerEvent('mm_radio:server:addToRadioChannel', Radio.RadioChannel, data.name)
     SetResourceKvp('radioSettings2', json.encode(Radio.userData))
-    cb(retreval)
+    cb("ok")
 end)
 
 RegisterNUICallback('getMutedList', function(_, cb)
