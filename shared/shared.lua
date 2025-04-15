@@ -10,7 +10,7 @@ Shared.MaxFrequency = 500.00 -- Max Limit of Radio Channel
 
 ---@type Jammer
 Shared.Jammer = {
-    state = true, -- to use jammer system or not 
+    state = false, -- to use jammer system or not 
     model = 'sm_prop_smug_jammer', -- prop to spawn for jammer
     permission = {"police"}, -- permission how can setup jammer (job/gang)
     default = {}, -- default jammer setup location 
@@ -34,7 +34,7 @@ Shared.RadioItem = {
 
 ---@type Battery
 Shared.Battery = {
-    state = true, -- to use battery system or not
+    state = false, -- to use battery system or not
     consume = 1, -- battery consume rate
     depletionTime = 1, -- in minute, every 1 minute battery will decrease by consume value
 }

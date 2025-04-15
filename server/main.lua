@@ -20,7 +20,6 @@ RegisterNetEvent('mm_radio:server:rechargeBattery', function()
     for i=1, #Shared.RadioItem do
         local item = exports.ox_inventory:GetSlotWithItem(src, Shared.RadioItem[i])
         if item then
-            print(json.encode(item, {indent = true}))
             local id = item.metadata?.radioId or false
             if not id then return end
             batteryData[id] = 100
@@ -187,7 +186,6 @@ local function SetRadioData(src, slot)
     local player = exports.qbx_core:GetPlayer(src)
     local radioId = player.PlayerData.citizenid .. math.random(1000, 9999)
     local name = player.PlayerData.charinfo.firstname .. " " .. player.PlayerData.charinfo.lastname
-    print('ghnm')
     exports.ox_inventory:SetMetadata(src, slot, { radioId = radioId, name = name })
     return radioId
 end
