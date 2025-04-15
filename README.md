@@ -1,3 +1,10 @@
+This has been imported and modified to work on Qbox instead. The original license and readme will still be included. So you might find references from here and from the original repository.
+- repository: https://github.com/SOH69/mm_radio
+- documentation: https://master-mind-store.gitbook.io/dashboard/free-release/radio
+
+> [!CAUTION] 
+> Don't want to build the UI yourself? Download from our releases: https://github.com/Qbox-project/mm_radio/releases
+
 A Beautiful Radio script for communication! It has many features packed in one script which every RP server wants and it provides a whole new UI look, enriching user experience.
 
 ## ⚠️ Attention
