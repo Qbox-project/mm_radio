@@ -1,56 +1,42 @@
-name: Build and Release
+name: Create New Release
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'  # This triggers the workflow on version tags
+  workflow_dispatch:
+    inputs:
+      version:
+        required: true
 
 jobs:
-  build:
+  create-release:
+    name: Create New Release
     runs-on: ubuntu-latest
-
     steps:
-    - name: Install archive tools
-      run: sudo apt install zip
-    
-    - name: Checkout repository
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 0
-        ref: ${{ github.event.repository.default_branch }}
-    
-    - uses: pnpm/action-setup@v2.0.1
-      with:
-        version: 8.6.1
+      - name: Get App Token
+        uses: actions/create-github-app-token@v1
+        id: generate_token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.PRIVATE_KEY }}
 
-    - name: Set up Node.js
-      uses: actions/setup-node@v2
-      with:
-        node-version: '21.x'
-        cache: 'pnpm'
-        cache-dependency-path: 'web/pnpm-lock.yaml'
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.generate_token.outputs.token }}
 
-    - name: Install dependencies
-      run: pnpm install
-      working-directory: web
+      - name: Setup node
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20.x
 
-    - name: Build Svelte project
-      run: pnpm run build
-      working-directory: web
+      - name: Bump manifest version
+        run: node .github/actions/bump-manifest-version.js
+        env:
+          TGT_RELEASE_VERSION: ${{ inputs.version }}
 
-    - name: Bundle files
-      run: |
-        mkdir -p ./temp/mm_radio
-        mkdir -p ./temp/mm_radio/build/
-        cp ./{LICENSE,README.md,battery.json,fxmanifest.lua} ./temp/mm_radio
-        cp -r ./{client,server,shared,locales} ./temp/mm_radio
-        cp -r ./build ./temp/mm_radio/build/
-        cd ./temp && zip -r ../mm_radio.zip ./mm_radio
-
-    - name: Create Release
-      uses: 'marvinpinto/action-automatic-releases@latest'
-      with:
-        repo_token: '${{ secrets.GITHUB_TOKEN }}'
-        title: ${{ github.ref }}
-        prerelease: false
-        files: mm_radio.zip
+      - name: Push manifest change
+        uses: EndBug/add-and-commit@v9
+        with:
+          add: fxmanifest.lua
+          push: true
+          message: 'chore: bump manifest version to ${{ inputs.version }}'
+          tag: ${{ inputs.version }}
