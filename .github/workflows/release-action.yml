@@ -41,10 +41,9 @@ jobs:
             - name: Bundle files
               run: |
                 mkdir -p ./temp/${{ github.event.repository.name }}
-                mkdir -p ./temp/${{ github.event.repository.name }}/build/
                 cp ./{LICENSE,README.md,battery.json,fxmanifest.lua} ./temp/${{ github.event.repository.name }}
                 cp -r ./{client,server,shared,locales} ./temp/${{ github.event.repository.name }}
-                cp -r ./build ./temp/${{ github.event.repository.name }}/build/
+                cp -r ./build ./temp/${{ github.event.repository.name }}/
                 cd ./temp && zip -r ../${{ github.event.repository.name }}.zip ./${{ github.event.repository.name }}
 
             - name: Get App Token
