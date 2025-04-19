@@ -1,6 +1,9 @@
 ---@type number
 Shared.MaxFrequency = 500.00 -- Max Limit of Radio Channel
 
+---@type boolean
+Shared.LeaveOnDeath = true -- Should the player leave the radio channel when they die
+
 ---@class Jammer
 ---@field state boolean
 ---@field model string
@@ -10,10 +13,10 @@ Shared.MaxFrequency = 500.00 -- Max Limit of Radio Channel
 
 ---@type Jammer
 Shared.Jammer = {
-    state = false, -- to use jammer system or not 
+    state = false, -- to use jammer system or not
     model = 'sm_prop_smug_jammer', -- prop to spawn for jammer
     permission = {"police"}, -- permission how can setup jammer (job/gang)
-    default = {}, -- default jammer setup location 
+    default = {}, -- default jammer setup location
     range = {
         min = 10.0,
         max = 100.0,
