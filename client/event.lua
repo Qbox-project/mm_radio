@@ -250,6 +250,9 @@ RegisterNetEvent('QBCore:Player:SetPlayerData', function(val)
         Wait(1000)
         Radio:doRadioCheck(val.items)
         Radio.PlayerDead = val.metadata.isdead or val.metadata.inlaststand
+        if Radio.PlayerDead then
+            Radio:LeaveOnDeath()
+        end
     end
 end)
 
@@ -263,10 +266,6 @@ RegisterNetEvent("QBCore:Client:SetDuty", function(newDuty)
     Radio.PlayerDuty = newDuty
 end)
 
-RegisterNetEvent("ND:updateCharacter", function(character)
-    Radio.PlayerDead = character.metadata.dead
-end)
-
 AddEventHandler('ox_inventory:updateInventory', function()
     Radio:doRadioCheck()
 end)
@@ -278,13 +277,15 @@ AddEventHandler('gameEventTriggered', function(event, data)
             if Radio.usingRadio then
                 TriggerEvent('mm_radio:client:remove')
             end
-            if Radio.playerLoaded and Radio.onRadio and Radio.hasRadio and Radio.RadioChannel ~= 0 then
-                Radio:leaveradio()
-            end
         end
     end
 end)
 
-AddStateBagChangeHandler('dead', ('player:%s'):format(cache.serverId), function(_, _, value)
-    Radio.PlayerDead = value
+-- Checking this statebag instead of "isDead" so we can also catch the "last stand" state
+AddStateBagChangeHandler('qbx_medical:deathState', ('player:%s'):format(cache.serverId), function(_, _, value)
+    local isDead = value ~= 1 and true or false
+    Radio.PlayerDead = isDead
+    if value then
+        Radio:LeaveOnDeath()
+    end
 end)
