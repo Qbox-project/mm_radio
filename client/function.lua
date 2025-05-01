@@ -335,6 +335,16 @@ function Radio:UpdateJammerRemove(id)
     end
 end
 
+function Radio:LeaveOnDeath()
+    if not self.PlayerDead then return end
+    if not Shared.LeaveOnDeath then return end
+    if not self.playerLoaded then return end
+    if not self.hasRadio then return end
+    if not self.onRadio then return end
+    if self.RadioChannel == 0 then return end
+    self:leaveradio()
+end
+
 function UpdateTime()
     CreateThread(function()
         while Radio.usingRadio do
