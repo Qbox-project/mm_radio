@@ -1,0 +1,33 @@
+{
+  "join_notify_description": "Połączono z kanałem %.2f MHz",
+  "invalid_notify_description": "Kanał %.2f MHz jest niedostępny",
+  "already_notify_description": "Masz już połączenie z kanałem %.2f MHz",
+  "restricted_notify_description": "Brak dostępu do kanału %.2f MHz",
+  "volume_notify_description": "Ustawiono głośność na %d%%",
+  "unsuccess_name": "Nie udało się zmienić nazwy",
+  "jammer_notify_description": "Błąd połączenia z kanałem %.2f MHz",
+  "toggle_defean": "Wyciszono radio",
+  "toggle_undeafen": "Odciszono radio",
+  "failed_mute": "Nie udało się wyciszyć gracza",
+  "ui": {
+    "header": "RADIO",
+    "frequency": "Częstotliwość",
+    "disconnect": "ROZŁĄCZ",
+    "notconnected": "BRAK POŁĄCZENIA",
+    "settings": "USTAWIENIA",
+    "channels": "KANAŁY",
+    "radio": "RADIO",
+    "members": "CZŁONKOWIE",
+    "favorites": "ULUBIONE",
+    "recommended": "PROPONOWANE",
+    "clear": "WYCZYŚĆ",
+    "hide_overlay": "UKRYJ NAKŁADKE",
+    "show_overlay": "POKAŻ NAKŁADKE",
+    "save": "ZAPISZ",
+    "radio_settings": "USTAWIENIA RADIA",
+    "move_radio": "PRZESUŃ RADIO",
+    "allow_move": "Zezwól na przesuwanie",
+    "overlay_settings": "USTAWIENIA NAKŁADKI",
+    "enableClicks": "DŹWIĘKI RADIA"
+  }
+}
