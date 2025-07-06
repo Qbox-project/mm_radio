@@ -8,9 +8,9 @@ This has been imported and modified to work on Qbox instead. The original licens
 A Beautiful Radio script for communication! It has many features packed in one script which every RP server wants and it provides a whole new UI look, enriching user experience.
 
 ## ⚠️ Attention
-Download a [release](https://github.com/SOH69/mm_radio/releases/) or build the source code
+Download a [release](https://github.com/Qbox-project/mm_radio/releases/) or build the source code
 ```
-git clone https://github.com/SOH69/mm_radio.git
+git clone https://github.com/Qbox-project/mm_radio.git
 cd mm_radio/web
 pnpm i
 pnpm run build
