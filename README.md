@@ -8,9 +8,9 @@ This has been imported and modified to work on Qbox instead. The original licens
 A Beautiful Radio script for communication! It has many features packed in one script which every RP server wants and it provides a whole new UI look, enriching user experience.
 
 ## ⚠️ Attention
-Download a [release](https://github.com/SOH69/mm_radio/releases/) or build the source code
+Download a [release](https://github.com/Qbox-project/mm_radio/releases/) or build the source code
 ```
-git clone https://github.com/SOH69/mm_radio.git
+git clone https://github.com/Qbox-project/mm_radio.git
 cd mm_radio/web
 pnpm i
 pnpm run build
@@ -24,11 +24,10 @@ pnpm run build
 ![image](https://imgur.com/xlg8Lrh.png)
 
 # DEPENDENCIES :  
-1. [ox_lib](https://github.com/overextended/ox_lib)
-2. [pma-voice](https://github.com/AvarianKnight/pma-voice)
-3. [bl_bridge](https://github.com/Byte-Labs-Studio/bl_bridge)
-4. QBCore/ESX/QBox/ND/Standalone(for job list)
-5. Onesync
+- [qbx_core](https://github.com/Qbox-project/qbx_core)
+- [ox_lib](https://github.com/communityox/ox_lib)
+- [ox_inventory](https://github.com/communityox/ox_inventory)
+- [pma-voice](https://github.com/AvarianKnight/pma-voice)
 
 # FEATURES:
 ### Radio Features
