@@ -209,18 +209,34 @@ RegisterNetEvent("mm_radio:client:recharge", function()
 end)
 
 RegisterNetEvent("pma-voice:radioActive", function(talkingState)
-    Radio:SendSvelteMessage("updateRadioTalking", {
-        radioId = tostring(Radio.playerServerID),
-        radioTalking = talkingState
-    })
+    if Radio.radioData and Radio.radioData[tostring(source)] then
+        Radio:SendSvelteMessage("updateRadioTalking", {
+            radioId = tostring(source),
+            radioTalking = talkingState
+        })
+    end
 end)
 
 RegisterNetEvent("pma-voice:setTalkingOnRadio", function(source, talkingState)
-    Radio:SendSvelteMessage("updateRadioTalking", {
-        radioId = tostring(source),
-        radioTalking = talkingState
-    })
+    if Radio.radioData and Radio.radioData[tostring(source)] then
+        Radio:SendSvelteMessage("updateRadioTalking", {
+            radioId = tostring(source),
+            radioTalking = talkingState
+        })
+    end
+
+    if not Shared.UseRanges then return end
+    local plyState = LocalPlayer.state
+    local radioCh = plyState.radioChannel or 0
+    print(('pma-voice:setTalkingOnRadio: %s, %s, %s'):format(source, talkingState, radioCh))
+    if talkingState and radioCh < Shared.MaxFrequency then
+        print(('pma-voice:setTalkingOnRadio: StartSubmixLoop %s'):format(source))
+        Radio:StartSubmixLoop(source)
+    else
+        Radio:StopSubmix(source)
+    end
 end)
+
 
 RegisterNetEvent('QBCore:Client:OnPlayerLoaded', function()
     Radio.playerLoaded = true

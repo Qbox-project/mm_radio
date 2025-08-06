@@ -222,6 +222,17 @@ lib.callback.register('mm_radio:server:getjammer', function()
     return jammer
 end)
 
+lib.callback.register('mm_radio:server:coords', function(source, netId)
+    local ped = GetPlayerPed(netId)
+
+    if not ped then
+        return vector3(0, 0, 0)
+    end
+
+    return GetEntityCoords(ped)
+end)
+
+
 if Shared.UseCommand then
     if not Shared.Ready then return end
     lib.addCommand('radio', {
