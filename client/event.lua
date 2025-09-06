@@ -228,9 +228,8 @@ RegisterNetEvent("pma-voice:setTalkingOnRadio", function(source, talkingState)
     if not Shared.UseRanges then return end
     local plyState = LocalPlayer.state
     local radioCh = plyState.radioChannel or 0
-    print(('pma-voice:setTalkingOnRadio: %s, %s, %s'):format(source, talkingState, radioCh))
+
     if talkingState and radioCh < Shared.MaxFrequency then
-        print(('pma-voice:setTalkingOnRadio: StartSubmixLoop %s'):format(source))
         Radio:StartSubmixLoop(source)
     else
         Radio:StopSubmix(source)

@@ -117,7 +117,6 @@ function Radio:InitSubmixes()
             v.channel6Volume or 1.0
         )
         AddAudioSubmixOutput(id, 0)
-        print('Created submix:', i, 'with ID:', id , 'for range:', filter.ranges and filter.ranges.min or 'N/A', '-', filter.ranges and filter.ranges.max or 'N/A')
     end
 end
 
@@ -138,7 +137,6 @@ local function getSubmixByDistance(serverId)
     local myCoords = GetEntityCoords(PlayerPedId())
     local theirCoords = GetPlayerCoords(serverId)
     local dist = #(myCoords - theirCoords)
-    print(myCoords, theirCoords, 'Distance to serverId:', serverId, 'is', dist)
     local submix = default
     local mute = false
 
@@ -167,8 +165,7 @@ function Radio:StartSubmixLoop(serverId)
             local ped = GetPlayerPed(GetPlayerFromServerId(serverId))
             if not DoesEntityExist(ped) then break end
 
-            local submix, mute= getSubmixByDistance(serverId)
-            print('Setting submix for serverId:', serverId, 'to submix:', submix, 'mute:', mute)
+            local submix, mute = getSubmixByDistance(serverId)
             MumbleSetSubmixForServerId(serverId, submix)
             MumbleSetVolumeOverrideByServerId(serverId, mute and 0.0 or (Radio.Volume / 100))
 
@@ -183,7 +180,6 @@ function Radio:StartSubmixLoop(serverId)
 end
 
 function Radio:StopSubmix(serverId)
-    print('Stopping submix for serverId:', serverId)
     playerTalking[serverId] = false
     MumbleSetSubmixForServerId(serverId, -1)
     MumbleSetVolumeOverrideByServerId(serverId, -1.0)

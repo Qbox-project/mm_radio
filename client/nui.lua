@@ -137,6 +137,5 @@ RegisterNUICallback('togglemutePlayer', function(data, cb)
     end
     exports['pma-voice']:toggleMutePlayer(data)
     Wait(100)
-    print(json.encode(exports['pma-voice']:getMutedPlayers()))
     cb(exports['pma-voice']:getMutedPlayers())
 end)
