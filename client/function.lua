@@ -1,4 +1,9 @@
 local insideJammer = false
+local submixes = {}
+local default = nil
+local jammer = nil
+local maxRange = 0
+local playerTalking = {}
 
 function IsJammerAllowed(id, channel)
     for i=1, #Radio.jammer do
@@ -67,6 +72,120 @@ function Radio:SetDefaultData(cid)
     SetResourceKvp('radioSettings2', json.encode(self.userData))
 end
 
+function Radio:InitSubmixes()
+    default = CreateAudioSubmix('Radio_Default')
+    SetAudioSubmixEffectRadioFx(default, 0)
+    SetAudioSubmixEffectParamInt(default, 0, `default`, 1)
+
+    for _, effect in pairs(Shared.DefaultRadioFilter.effect) do
+        SetAudioSubmixEffectParamFloat(default, 0, GetHashKey(effect.name), effect.value)
+    end
+
+    local v = Shared.DefaultRadioFilter.volume
+    SetAudioSubmixOutputVolumes(default, 0,
+        v.frontLeftVolume or 0.75,
+        v.frontRightVolume or 1.0,
+        v.rearLeftVolume or 0.0,
+        v.rearRightVolume or 0.0,
+        v.channel5Volume or 1.0,
+        v.channel6Volume or 1.0
+    )
+    AddAudioSubmixOutput(default, 0)
+
+    for i, filter in ipairs(Shared.Ranges) do
+        local id = CreateAudioSubmix('Radio_Range_' .. i)
+        submixes[i] = { id = id, effect = filter }
+
+        if filter.ranges and filter.ranges.max > maxRange then
+            maxRange = filter.ranges.max
+        end
+
+        SetAudioSubmixEffectRadioFx(id, 0)
+        SetAudioSubmixEffectParamInt(id, 0, `default`, 1)
+
+        for _, e in pairs(filter.effect or {}) do
+            SetAudioSubmixEffectParamFloat(id, 0, GetHashKey(e.name), e.value)
+        end
+
+        local v = filter.volume or {}
+        SetAudioSubmixOutputVolumes(id, 0,
+            v.frontLeftVolume or 0.25,
+            v.frontRightVolume or 1.0,
+            v.rearLeftVolume or 0.0,
+            v.rearRightVolume or 0.0,
+            v.channel5Volume or 1.0,
+            v.channel6Volume or 1.0
+        )
+        AddAudioSubmixOutput(id, 0)
+    end
+end
+
+function GetPlayerCoords(netId)
+    local player = GetPlayerFromServerId(netId)
+
+    if player ~= -1 then
+        return GetEntityCoords(GetPlayerPed(player))
+    end
+
+    local coords = lib.callback.await('mm_radio:server:coords', false, netId)
+
+    return coords
+end
+
+
+local function getSubmixByDistance(serverId)
+    local myCoords = GetEntityCoords(PlayerPedId())
+    local theirCoords = GetPlayerCoords(serverId)
+    local dist = #(myCoords - theirCoords)
+    local submix = default
+    local mute = false
+
+    for _, smx in pairs(submixes) do
+        local r = smx.effect.ranges
+        if r and dist > r.min and dist < r.max then
+            submix = smx.id
+            mute = r.mute or false
+            break
+        end
+    end
+
+    if dist >= maxRange then
+        mute = true
+    end
+
+    return submix, mute
+end
+
+function Radio:StartSubmixLoop(serverId)
+    if playerTalking[serverId] then return end
+    playerTalking[serverId] = true
+
+    CreateThread(function()
+        while playerTalking[serverId] do
+            local ped = GetPlayerPed(GetPlayerFromServerId(serverId))
+            if not DoesEntityExist(ped) then break end
+
+            local submix, mute = getSubmixByDistance(serverId)
+            MumbleSetSubmixForServerId(serverId, submix)
+            MumbleSetVolumeOverrideByServerId(serverId, mute and 0.0 or (Radio.Volume / 100))
+
+            Wait(500)
+        end
+
+        -- Cleanup
+        MumbleSetSubmixForServerId(serverId, -1)
+        MumbleSetVolumeOverrideByServerId(serverId, -1.0)
+        playerTalking[serverId] = nil
+    end)
+end
+
+function Radio:StopSubmix(serverId)
+    playerTalking[serverId] = false
+    MumbleSetSubmixForServerId(serverId, -1)
+    MumbleSetVolumeOverrideByServerId(serverId, -1.0)
+end
+
+
 function Radio:Init(data)
     local player = data or QBX.PlayerData
     self.identifier = player.cid
@@ -95,6 +214,8 @@ function Radio:Init(data)
     end
 
     self:doRadioCheck()
+    self:InitSubmixes()
+
 end
 
 function Radio:connecttoradio(channel)

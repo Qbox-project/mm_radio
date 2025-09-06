@@ -127,4 +127,116 @@ Shared.RestrictedChannels = {
     },
 }
 
+Shared.UseRanges = true 
+
+Shared.DefaultRadioFilter = {
+    effect = {
+        { name = "freq_low", value = 300.0 },
+        { name = "freq_hi", value = 5000.0 },
+        { name = "rm_mod_freq", value = 400.0 },
+        { name = "rm_mix", value = 0.1 },
+        { name = "fudge", value = 2.0 },
+        { name = "o_freq_lo", value = 300.0 },
+        { name = "o_freq_hi", value = 5000.0 },
+    },
+    volume = {
+        frontLeftVolume = 0.25,
+        frontRightVolume = 1.0,
+        rearLeftVolume = 0.0,
+        rearRightVolume = 0.0,
+        channel5Volume = 1.0,
+        channel6Volume = 1.0
+    }
+}
+
+Shared.Ranges = {
+    {
+        ranges = { min = 900.0, max = 1400.0 },
+        effect = {
+            { name = "freq_low", value = 300.0 },
+            { name = "freq_hi", value = 5000.0 },
+            { name = "rm_mod_freq", value = 300.0 },
+            { name = "rm_mix", value = 0.25 }, -- subtle modulation
+            { name = "fudge", value = 5.0 },   -- light distortion
+            { name = "o_freq_lo", value = 300.0 },
+            { name = "o_freq_hi", value = 5000.0 },
+        },
+        volume = {
+            frontLeftVolume = 0.25,
+            frontRightVolume = 0.8,
+            rearLeftVolume = 0.0,
+            rearRightVolume = 0.0,
+            channel5Volume = 0.9,
+            channel6Volume = 0.9
+        }
+    },
+    {
+        ranges = { min = 1400.0, max = 1900.0 },
+        effect = {
+            { name = "freq_low", value = 250.0 },
+            { name = "freq_hi", value = 4800.0 },
+            { name = "rm_mod_freq", value = 300.0 },
+            { name = "rm_mix", value = 0.4 },
+            { name = "fudge", value = 10.0 },
+            { name = "o_freq_lo", value = 300.0 },
+            { name = "o_freq_hi", value = 5000.0 },
+        },
+        volume = {
+            frontLeftVolume = 0.2,
+            frontRightVolume = 0.6,
+            rearLeftVolume = 0.0,
+            rearRightVolume = 0.0,
+            channel5Volume = 0.7,
+            channel6Volume = 0.7
+        }
+    },
+    {
+        ranges = { min = 1900.0, max = 2500.0 },
+        effect = {
+            { name = "freq_low", value = 200.0 },
+            { name = "freq_hi", value = 4000.0 },
+            { name = "rm_mod_freq", value = 350.0 },
+            { name = "rm_mix", value = 0.65 },
+            { name = "fudge", value = 18.0 },
+            { name = "o_freq_lo", value = 300.0 },
+            { name = "o_freq_hi", value = 5000.0 },
+        },
+        volume = {
+            frontLeftVolume = 0.15,
+            frontRightVolume = 0.4,
+            rearLeftVolume = 0.0,
+            rearRightVolume = 0.0,
+            channel5Volume = 0.6,
+            channel6Volume = 0.6
+        }
+    },
+    {
+        ranges = { min = 2500.0, max = 2700.0 },
+        effect = {
+            { name = "freq_low", value = 150.0 },
+            { name = "freq_hi", value = 3500.0 },
+            { name = "rm_mod_freq", value = 400.0 },
+            { name = "rm_mix", value = 0.85 },
+            { name = "fudge", value = 30.0 },
+            { name = "o_freq_lo", value = 300.0 },
+            { name = "o_freq_hi", value = 5000.0 },
+        },
+        volume = {
+            frontLeftVolume = 0.05,
+            frontRightVolume = 0.1,
+            rearLeftVolume = 0.0,
+            rearRightVolume = 0.0,
+            channel5Volume = 0.3,
+            channel6Volume = 0.3
+        }
+    },
+    {
+        ranges = { min = 2700.0, max = 9999.0 },
+        mute = true,
+        effect = {}, -- no need
+        volume = {}
+    }
+}
+
+
 lib.locale()
