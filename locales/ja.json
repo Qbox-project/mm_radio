@@ -1,0 +1,33 @@
+{
+    "join_notify_description": "ステーション %.2f MHz に参加しました",
+    "invalid_notify_description": "ステーション %.2f MHz は利用できません",
+    "already_notify_description": "すでにステーション %.2f MHz に接続中です",
+    "restricted_notify_description": "ステーション %.2f MHz には参加できません",
+    "volume_notify_description": "音量を %d%% に設定しました",
+    "unsuccess_name": "名前の変更に失敗しました",
+    "jammer_notify_description": "ステーション %.2f MHz への接続に失敗しました",
+    "toggle_defean": "ラジオをデフ（消音）にしました",
+    "toggle_undeafen": "ラジオのデフを解除しました",
+    "failed_mute": "プレイヤーのミュートに失敗しました",
+    "ui": {
+        "header": "ラジオ接続中",
+        "frequency": "周波数",
+        "disconnect": "切断",
+        "notconnected": "未接続",
+        "settings": "設定",
+        "channels": "チャンネル",
+        "radio": "ラジオ",
+        "members": "メンバー",
+        "favorites": "お気に入り",
+        "recommended": "おすすめ",
+        "clear": "クリア",
+        "hide_overlay": "オーバーレイを非表示",
+        "show_overlay": "オーバーレイを表示",
+        "save": "保存",
+        "radio_settings": "ラジオ設定",
+        "move_radio": "ラジオを移動",
+        "allow_move": "移動を許可",
+        "overlay_settings": "オーバーレイ設定",
+        "enableClicks": "ラジオ音"
+    }
+}
