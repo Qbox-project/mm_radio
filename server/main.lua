@@ -206,8 +206,8 @@ lib.callback.register('mm_radio:server:getradiodata', function(source, slot)
         slotid = slot.slot
     end
     local slotData = exports.ox_inventory:GetSlot(source, slotid)
+	local id = false
     if slotData and lib.table.contains(Shared.RadioItem, slotData.name) then
-        local id = false
         if not slotData.metadata?.radioId then
             id = SetRadioData(source, slotid)
         else
