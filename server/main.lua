@@ -326,14 +326,16 @@ end
 
 local function GetSlotWithRadio(source)
     for i=1, #Shared.RadioItem do
-        return exports.ox_inventory:GetSlotIdWithItem(source, Shared.RadioItem[i])
+        local slot = exports.ox_inventory:GetSlotIdWithItem(source, Shared.RadioItem[i])
+        if slot then return slot end
     end
 end
 
 lib.callback.register('mm_radio:server:getradiodata', function(source, slot)
     if not Shared.Battery.state then return 100, 'PERSONAL' end
     local battery = 100
-    local slotid = false
+    local id = false
+    local slotid
     if not slot then
         slotid = GetSlotWithRadio(source)
     else
@@ -341,7 +343,6 @@ lib.callback.register('mm_radio:server:getradiodata', function(source, slot)
     end
     local slotData = exports.ox_inventory:GetSlot(source, slotid)
     if slotData and lib.table.contains(Shared.RadioItem, slotData.name) then
-        local id = false
         if not slotData.metadata?.radioId then
             id = SetRadioData(source, slotid)
         else
