@@ -188,13 +188,11 @@ function Radio:CalculateTimeToDisplay()
     local minute = GetClockMinutes()
     local second = GetClockSeconds()
 
-    local obj = ""
-
 	if minute <= 9 then
 		minute = "0" .. minute
     end
 
-    obj = hour..":"..minute
+    local obj = hour..":"..minute
 
     return obj, (60 - second)
 end
