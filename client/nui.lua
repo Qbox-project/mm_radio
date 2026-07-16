@@ -118,7 +118,7 @@ end)
 RegisterNUICallback('saveData', function(data, cb)
     local player = QBX.PlayerData
     local identifier = player.cid
-    if not identifier then return Radio:Notify(locale('unsuccess_name', channel)) end
+    if not identifier then return Radio:Notify(locale('unsuccess_name')) end
     Radio.userData[Radio.identifier].name = data.name
     Radio:update()
     TriggerServerEvent('mm_radio:server:addToRadioChannel', Radio.RadioChannel, data.name)
