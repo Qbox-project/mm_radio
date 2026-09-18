@@ -51,7 +51,7 @@ end)
 
 RegisterNetEvent('mm_radio:client:usejammer', function()
     if not Shared.Jammer.permission or not (lib.table.contains(Shared.Jammer.permission, Radio.PlayerJob) or lib.table.contains(Shared.Jammer.permission, Radio.PlayerGang)) then
-        lib.notify({
+        return lib.notify({
             title = 'You dont have permission to use this item',
             type = 'error'
         })
